@@ -5,7 +5,9 @@
     written by Giacarlo Bacchio (Gianbacchio on Github)
     adapted by Brian Lough
  *******************************************************************/
-#include <ESP8266WiFi.h>
+//#include <ESP8266WiFi.h>  //include this for ESP8266
+#include <WiFi.h>  //include this for Adafruit HUZZAH32
+
 #include <WiFiClientSecure.h>
 #include <UniversalTelegramBot.h>
 
@@ -51,7 +53,9 @@ int Bot_mtbs = 1000; //mean time between scan messages
 long Bot_lasttime;   //last time messages' scan has been done
 bool Start = false;
 
-const int ledPin = 2;
+//const int ledPin = 2;   //ESP8266
+const int ledPin = 13;    //Adafruit HUZZAH32
+
 int ledStatus = 0;
 
 void handleNewMessages(int numNewMessages) {
@@ -90,14 +94,17 @@ void handleNewMessages(int numNewMessages) {
     
 
     if (text == "/ledon") {
-      digitalWrite(ledPin, LOW);   // turn the LED on (HIGH is the voltage level)
+      //digitalWrite(ledPin, LOW);   // turn the LED on (HIGH is the voltage level)   //esp8266
+      digitalWrite(ledPin, HIGH);   // turn the LED on (HIGH is the voltage level)     //Heather32
       ledStatus = 1;
       bot.sendMessage(chat_id, "Led is ON", "");
     }
 
     if (text == "/ledoff") {
       ledStatus = 0;
-      digitalWrite(ledPin, HIGH);    // turn the LED off (LOW is the voltage level)
+      //digitalWrite(ledPin, HIGH);    // turn the LED off (LOW is the voltage level)  //esp8266
+      digitalWrite(ledPin, LOW);    // turn the LED off (LOW is the voltage level)    //Heather32
+      
       bot.sendMessage(chat_id, "Led is OFF", "");
     }
 
@@ -168,7 +175,8 @@ void setup() {
 
   pinMode(ledPin, OUTPUT); // initialize digital ledPin as an output.
   delay(10);
-  digitalWrite(ledPin, HIGH); // initialize pin as off
+ // digitalWrite(ledPin, HIGH); // initialize pin as off    //esp8266
+  digitalWrite(ledPin, LOW); // initialize pin as off    //Adafruit HUZZAH32
 
   //https://arduino.stackexchange.com/questions/42922/get-hour-with-ctime-time-library-with-esp8266
   //https://github.com/esp8266/Arduino/issues/2505
