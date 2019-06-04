@@ -12,7 +12,7 @@
 #include <UniversalTelegramBot.h>
 
 #include <time.h>
-#include <TimeLib.h>    //https://github.com/PaulStoffregen/Time
+//#include <TimeLib.h>    //https://github.com/PaulStoffregen/Time  (I don't remember why I might need this. I last used this in early 2018).
 int timezone = -6;      //MST
 int dst = 0;        //I don't think that the core supports Daylight Savings time.
 
@@ -119,6 +119,9 @@ void handleNewMessages(int numNewMessages) {
       time_t now = time(nullptr);
       bot.sendMessage(chat_id, ctime(&now), "");      //return the current time
 
+  Serial.print("time is: ");
+  Serial.println(ctime(&now));
+
       //The Arduino Time library returns a time_t to the now() function.  time_t t = now(); // store the current time in time variable t. I am not sure why this doesn't work.
       //bot.sendMessage(chat_id, String(minute(now)), "");    //return the current minute
 
@@ -182,9 +185,15 @@ void setup() {
   //https://github.com/esp8266/Arduino/issues/2505
   //https://github.com/esp8266/Arduino/issues/1679
 
+ 
+ // configTime(0, 0, "pool.ntp.org");  (timezone is not correct with this)
+  
   //this sets the core to periodically sync the time. I don't really know how often this happens
   configTime(timezone * 3600, dst, "pool.ntp.org", "time.nist.gov");
-
+  time_t now = time(nullptr);
+  Serial.print("time is: ");
+  Serial.println(ctime(&now));
+  
 }
 
 void loop() {
